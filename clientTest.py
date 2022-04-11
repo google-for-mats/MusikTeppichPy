@@ -1,20 +1,7 @@
 import socket
-from telnetlib import TN3270E
 import threading
 import time
-import logging
 
-
-""" class thread1(threading.Thread):
-    def __init__(self, iD, name):
-        threading.Thread.__init__(self)
-        self.iD = iD
-        self.name = name
-
-    def run(self):
-        print("Starte ", self.iD)
-        time.sleep(self.iD * 5)
-        print("Thread closed",self.iD) """
 
 host = "192.168.178.154"
 
