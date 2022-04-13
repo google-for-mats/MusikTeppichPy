@@ -20,14 +20,14 @@ class ArrayXYZ():
         auth_plugin='mysql_native_password'
         )
 
-        
+
         
         songSP = []
         DatabaseArrayS = []
 
         def selectSongsDuration(self):
 
-            while(1):
+            while(True):
 
                 DBInstanz = Database()
 
@@ -36,18 +36,19 @@ class ArrayXYZ():
                 print(minID)
 
                 now = datetime.now()
-                durationDB  = DBInstanz.selectSongsDurationDB()
+                durationDB  = 234#DBInstanz.selectSongsDurationDB()
                 print(durationDB)
                 y = 0
                 timeSong = 0
 
-                for x in durationDB:
-                    sec = functools.reduce(lambda sub, ele: sub * 10 + ele, durationDB[y])
+                for x in range(durationDB):
+ 
+                    sec = 123#functools.reduce(lambda sub, ele: sub * 10 + ele, durationDB[y])
 
-                    for w in x:
+                    for w in range(x):
                         timeSong += sec
 
-                    
+                                     
                     finalDate = now + timedelta(seconds=timeSong)
 
                     self.songSP.append(finalDate)
@@ -58,6 +59,8 @@ class ArrayXYZ():
 
 
         def selectSpielzeit(self, songSP, durationDB):
+
+
             mycursor = self.mydb.cursor()
 
             mycursor.execute("SELECT spzeit FROM spielzeit ORDER BY spzeit ASC LIMIT 6;")
@@ -128,17 +131,17 @@ class ArrayXYZ():
             duration = functools.reduce(lambda sub, ele: sub * 10 + ele, durationDB[0])
 
             duration = 2
-            f1=1
-            f2=2
-            f3=3
+
             z = duration
             y = duration + 1
 
-            for x in range(duration):
+            for g in range(duration):
                 y-=1
                 print(y)
                 time.sleep(1)
             print("after loop")
             TCPInstanz.startThread()
+
+
             
 Array_Instanz = ArrayXYZ()

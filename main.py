@@ -12,3 +12,4 @@ mainInstanz = main()
 
 if __name__ == "__main__":
     mainInstanz.startFillArray()
+    
