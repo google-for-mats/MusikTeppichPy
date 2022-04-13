@@ -121,7 +121,7 @@ class Database:
             connection = self.__connectToDB()    
             if connection.is_connected():
                 cursor = connection.cursor()
-                sqlSelectQuery = """DELETE FROM spielzeit WHERE spielzeitType = "SZ" AND spielzeit_id = %s;"""
+                sqlSelectQuery = """DELETE FROM spielzeit WHERE spielzeit_id = %s;"""
                 cursor.execute(sqlSelectQuery, (sZID,))
 
         except Error as e:
@@ -132,12 +132,12 @@ class Database:
                 cursor.close()
                 connection.close()
 
-    def selectDateiname(self, dateiId):
+    def selectDatei(self, dateiId):
         try:    
             connection = self.__connectToDB()                             
             if connection.is_connected():
                 cursor = connection.cursor()
-                sqlSelectQuery = """SELECT datei_name FROM datei WHERE datei_id = %s"""
+                sqlSelectQuery = """SELECT * FROM datei WHERE datei_id = %s"""
                 cursor.execute(sqlSelectQuery, (dateiId,))
                 record = cursor.fetchone()
                 return record
