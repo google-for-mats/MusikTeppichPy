@@ -3,19 +3,22 @@ from mysql.connector import Error
 
 class Database:
 
-    def selectMinID(self):
-        try:
-            connection = mysql.connector.connect(host='localhost', 
+    def __connectToDB(self):
+        return mysql.connector.connect(host='localhost', 
                                                 database='aktiv_radio',
                                                 user='root',
                                                 password='123MySql')
+
+    #public Methods
+    #Select and Delete
+    def selectMinID(self):
+        try:
+            connection = self.__connectToDB()
             if connection.is_connected():
-                db_Info = connection.get_server_info()
-                print("Connected to MySQL Server version ", db_Info)
                 cursor = connection.cursor()
                 cursor.execute("SELECT MIN(song_id) as min_id FROM song LIMIT 1;")
                 record = cursor.fetchone()
-                print("Your're cnnected to database: ", record)
+                return record[0]
         
         except Error as e:
             print("Error while connecting to Database", e)
@@ -24,21 +27,15 @@ class Database:
             if connection.is_connected():
                 cursor.close()
                 connection.close()
-                print("MySQL connection is closed")
 
     def selectMaxID(self):
         try:
-            connection = mysql.connector.connect(host='localhost', 
-                                                database='aktiv_radio',
-                                                user='root',
-                                                password='123MySql')
+            connection = self.__connectToDB()
             if connection.is_connected():
-                db_Info = connection.get_server_info()
-                print("Connected to MySQL Server version ", db_Info)
                 cursor = connection.cursor()
                 cursor.execute("SELECT MAX(song_id) as max_id FROM song LIMIT 1;")
                 record = cursor.fetchone()
-                print("Your're cnnected to database: ", record)
+                return record[0]
         
         except Error as e:
             print("Error while connecting to Database", e)
@@ -47,23 +44,18 @@ class Database:
             if connection.is_connected():
                 cursor.close()
                 connection.close()
-                print("MySQL connection is closed")
 
 
-    def selectSpielzeit(self):
+    def selectSpielzeit(self, start, end):
         try:    
-            connection = mysql.connector.connect(host='localhost', 
-                                                database='aktiv_radio',
-                                                user='root',
-                                                password='123MySql')    
+            connection = self.__connectToDB()    
             if connection.is_connected():
-                db_Info = connection.get_server_info()
-                print("Connected to MySQL Server version ", db_Info)
                 cursor = connection.cursor()
-                cursor.execute("select * from spielzeit WHERE spielzeitType = 'SZ' ORDER BY spzeit DESC;")
+                sqlSelectQuery = """SELECT * FROM spielzeit WHERE spielzeitType = "SZ" AND spzeit BETWEEN %s AND %s ORDER BY spzeit DESC;"""
+                cursor.execute(sqlSelectQuery, (start, end))
                 record = cursor.fetchone()
-                print("Your're cnnected to database: ", record)
-        
+                return record
+
         except Error as e:
             print("Error while connecting to Database", e)
         
@@ -71,23 +63,32 @@ class Database:
             if connection.is_connected():
                 cursor.close()
                 connection.close()
-                print("MySQL connection is closed")
 
+    def deleteSpielzeit(self, sZID):
+        try:    
+            connection = self.__connectToDB()    
+            if connection.is_connected():
+                cursor = connection.cursor()
+                sqlSelectQuery = """DELETE FROM spielzeit WHERE spielzeitType = "SZ" AND spielzeit_id = %s;"""
+                cursor.execute(sqlSelectQuery, (sZID,))
+
+        except Error as e:
+            print("Error while connecting to Database", e)
+        
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
 
     def selectSong(self, songId):
         try:    
-            connection = mysql.connector.connect(host='localhost', 
-                                                database='aktiv_radio',
-                                                user='root',
-                                                password='123MySql')    
+            connection = self.__connectToDB()    
             if connection.is_connected():
-                db_Info = connection.get_server_info()
-                print("Connected to MySQL Server version ", db_Info)
                 cursor = connection.cursor()
                 sqlSelectQuery = """SELECT song_name, artist, title, duration FROM song where song_id = %s"""
                 cursor.execute(sqlSelectQuery, (songId,))
                 record = cursor.fetchone()
-                print("Your're cnnected to database: ", record)
+                return record
         
         except Error as e:
             print("Error while connecting to Database", e)
@@ -96,24 +97,51 @@ class Database:
             if connection.is_connected():
                 cursor.close()
                 connection.close()
-                print("MySQL connection is closed")
 
 
     def selectJingle(self, start, end):
         try:    
-            connection = mysql.connector.connect(host='localhost', 
-                                                database='aktiv_radio',
-                                                user='root',
-                                                password='123MySql')
-                                                
+            connection = self.__connectToDB()                             
             if connection.is_connected():
-                db_Info = connection.get_server_info()
-                print("Connected to MySQL Server version ", db_Info)
                 cursor = connection.cursor()
                 sqlSelectQuery = """SELECT * FROM spielzeit WHERE spielzeitType = "Jingle" AND WartenBisFertig = 1 AND spzeit BETWEEN %s AND %s"""
                 cursor.execute(sqlSelectQuery, (start, end))
+                record = cursor.fetchall()
+                return record
+
+        except Error as e:
+            print("Error while connecting to Database", e)
+        
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+
+    def deleteJingle(self, sZID):
+        try:    
+            connection = self.__connectToDB()    
+            if connection.is_connected():
+                cursor = connection.cursor()
+                sqlSelectQuery = """DELETE FROM spielzeit WHERE spielzeitType = "SZ" AND spielzeit_id = %s;"""
+                cursor.execute(sqlSelectQuery, (sZID,))
+
+        except Error as e:
+            print("Error while connecting to Database", e)
+        
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+
+    def selectDateiname(self, dateiId):
+        try:    
+            connection = self.__connectToDB()                             
+            if connection.is_connected():
+                cursor = connection.cursor()
+                sqlSelectQuery = """SELECT datei_name FROM datei WHERE datei_id = %s"""
+                cursor.execute(sqlSelectQuery, (dateiId,))
                 record = cursor.fetchone()
-                print("Your're cnnected to database: ", record)
+                return record
         
         except Error as e:
             print("Error while connecting to Database", e)
@@ -122,4 +150,4 @@ class Database:
             if connection.is_connected():
                 cursor.close()
                 connection.close()
-                print("MySQL connection is closed")                 
+
