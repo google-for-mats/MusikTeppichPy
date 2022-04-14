@@ -98,7 +98,6 @@ class Database:
                 cursor.close()
                 connection.close()
 
-
     def selectJingle(self, start, end):
         try:    
             connection = self.__connectToDB()                             
@@ -158,7 +157,7 @@ class Database:
                 sqlSelectQuery = """SELECT * FROM datei WHERE datei_id = %s"""
                 cursor.execute(sqlSelectQuery, (dateiId,))
                 record = cursor.fetchone()
-                return record
+                return record[0], record[1], record[2]
         
         except Error as e:
             print("Error while connecting to Database", e)
