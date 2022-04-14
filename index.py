@@ -1,4 +1,5 @@
 from Database import Database as DB
+from MusicPlayer import MusicPlayer as MP
 
 myDB = DB()
 minID = myDB.selectMinID()
@@ -17,3 +18,7 @@ print(song)
 print(sZeit)
 print(jingles)
 print(dateiname)
+
+x = MP("18 Grease - Megamix Operación Triunfo 2005.mp3", "thaht", "thishaihd", 3, False, "keine")
+x.playSong()
+
