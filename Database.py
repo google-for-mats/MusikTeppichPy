@@ -1,3 +1,4 @@
+from colorama import Cursor
 import mysql.connector
 from mysql.connector import Error
 #from fillArrayTest import *
@@ -27,7 +28,7 @@ class Database:
                 cursor.close()
                 connection.close()
 
-    async def selectMaxID(self):
+    def selectMaxID(self):
         try:
             connection = self.__connectToDB()
             if connection.is_connected():
@@ -132,6 +133,23 @@ class Database:
                 cursor.close()
                 connection.close()
 
+    def selectJingleForArray(self, dateiId):
+        try:
+            connection = self.__connectToDB()
+            if connection.is_connected():
+                cursor = connection.cursor()
+                sqlSelectQuery = """SELECT datei_name, firmaname, datei_name, duration FROM datei JOIN firma ON(datei.firma_id = firma.firma_id) WHERE datei_id = %s;"""
+                cursor.execute(sqlSelectQuery, (dateiId,))
+                record = cursor.fetchone()
+                return record
+
+        except Error as e:
+            print("Error while connecting to Database", e)
+        
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
     def selectDatei(self, dateiId):
         try:    
             connection = self.__connectToDB()                             
